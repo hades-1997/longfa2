@@ -1,0 +1,29 @@
+{
+  "name": "longfa2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hades-1997/longfa2.git"
+  },
+  "keywords": [
+    "longfa2"
+  ],
+  "author": "dacloi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hades-1997/longfa2/issues"
+  },
+  "homepage": "https://github.com/hades-1997/longfa2#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
