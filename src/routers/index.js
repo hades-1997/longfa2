@@ -1,9 +1,7 @@
-const homeRouter = require ('./home')
+import homeRouter from './home.js';
 
-function route (app) {
-    app.get('/', (req, res) => {
-        res.render('home');
-      });
+function route(app) {
+    app.use('/', homeRouter);
 }
 
 export default route;

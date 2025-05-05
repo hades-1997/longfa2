@@ -1,8 +1,9 @@
 import express from 'express';
+import homeControllers from '../app/controllers/HomeController.js';
+
 const router = express.Router();
 
-const homeControllers =  require ('../app/controllers/HomeController');
+router.use('/:slug', homeControllers.show);
+router.use('/', homeControllers.index);
 
-router.use('/', homeControllers.index)
-
-module.exports = new router;
+export default router;
