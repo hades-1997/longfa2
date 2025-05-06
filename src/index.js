@@ -4,6 +4,12 @@ import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import route from './routers/index.js';
+import db from './config/db/index.js';
+
+//connect db
+
+db.connect();
+
 const app = express();
 const port = 3000;
 

@@ -1,6 +1,13 @@
+import KeyModel from '../models/KeyActive.js';
+import mongooseHelpers from '../../util/mongoose.js';
+
 class HomeController {
-    index(req, res) {
-        res.render('home');
+    async index(req, res, next) {
+        await KeyModel.find({}).then(keyactives => {
+            res.render('home', {
+                keyactives: mongooseHelpers.mutipleMongooseToObject(keyactives)
+            })
+        }).catch(error => next(error));
     }
 
     show(req, res) {
