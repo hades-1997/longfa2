@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import slugify from 'slugify';
 
 const Schema = mongoose.Schema;
 
@@ -11,8 +12,16 @@ const KeyActive = new Schema({
   office_link: { type: String, maxLength: 600 },
   username: { type: String, maxLength: 600 },
   password: { type: String, maxLength: 600 },
-  createAt: { type: Date, default: Date.now },
-  updateAt: { type: Date, default: Date.now }
+  slug: { type: String, slug: 'name', unique: true }
+}, {
+  timestamps : true,
+});
+
+KeyActive.pre('save', function (next) {
+  if (!this.slug) {
+      this.slug = slugify(this.name, { lower: true, strict: true });
+  }
+  next();
 });
 
 const KeyModel = mongoose.model('KeyActive', KeyActive);

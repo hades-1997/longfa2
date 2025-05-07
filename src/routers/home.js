@@ -3,7 +3,9 @@ import homeControllers from '../app/controllers/HomeController.js';
 
 const router = express.Router();
 
-router.use('/:slug', homeControllers.show);
+router.get('/create', homeControllers.create);
+router.post('/store', homeControllers.store);
+router.get('/:slug', homeControllers.show);
 router.use('/', homeControllers.index);
 
 export default router;
