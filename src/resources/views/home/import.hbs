@@ -1,0 +1,38 @@
+<div class="container mt-4">
+    <h2>Import dữ liệu từ Excel</h2>
+
+    {{#if error}}
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
+    {{/if}}
+
+    {{#if success}}
+    <div class="alert alert-success" role="alert">
+        {{success}}
+    </div>
+    {{/if}}
+
+    <div class="card">
+        <div class="card-body">
+            <form action="/home/import" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="excelFile" class="form-label">Chọn file Excel</label>
+                    <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx, .xls" required>
+                    <div class="form-text">Chỉ chấp nhận file Excel (.xlsx, .xls)</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Import</button>
+                <a href="/" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h4>Hướng dẫn:</h4>
+        <ol>
+            <li>File Excel cần có cột "name" chứa tên máy tính</li>
+            <li>Dữ liệu bắt đầu từ dòng đầu tiên của sheet đầu tiên</li>
+            <li>Hàng đầu tiên sẽ được coi là tên cột</li>
+        </ol>
+    </div>
+</div>

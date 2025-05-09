@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="border border-light mt-3 p-5 bg-light">
+        <h2>{{#if isEdit}}Chỉnh sửa máy tính{{else}}Thêm mới máy tính{{/if}}</h2>
+
+        {{#if error}}
+            <div class="alert alert-danger">{{error}}</div>
+        {{/if}}
+
+        {{#if success}}
+            <div class="alert alert-success">{{success}}</div>
+        {{/if}}
+
+        <form action="{{#if isEdit}}/{{keyactive._id}}/save{{else}}/save{{/if}}" method="POST">
+            {{#if isEdit}}
+                <input type="hidden" name="_method" value="PUT">
+            {{/if}}
+
+           <div class="form-group  mt-2 ">
+                <label>Tên máy tính</label>
+                <input type="text" value="{{keyactive.name}}" name="name" class="form-control">
+            </div>
+            <div class="form-group  mt-2 ">
+                <label>Window version</label>
+                <input type="text" value="{{keyactive.window_version}}" name="window_version" class="form-control">
+            </div>
+            <div class="form-group  mt-2 ">
+                <label>Key window</label>
+                <input type="text" value="{{keyactive.key_window}}" name="key_window" class="form-control">
+            </div>
+            <div class="form-group  mt-2">
+                <label>Office version</label>
+                <input type="text" value="{{keyactive.office_version}}" name="office_version" class="form-control">
+            </div>
+            <div class="form-group  mt-2">
+                <label>Key office</label>
+                <input type="text" value="{{keyactive.key_office}}" name="key_office" class="form-control">
+            </div>
+            <div class="form-group  mt-2">
+                <label>Link office</label>
+                <input type="text" value="{{keyactive.office_link}}" name="office_link" class="form-control">
+            </div>
+            <div class="form-group  mt-2">
+                <label>Username</label>
+                <input type="text" value="{{keyactive.username}}" name="username" class="form-control">
+            </div>
+            <div class="form-group  mt-2">
+                <label>Password</label>
+                <input type="text" value="{{keyactive.password}}" name="password" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2 mb-5">
+                {{#if isEdit}}Lưu lại {{else}}Thêm mới{{/if}}
+            </button>
+            <a href="/" class="btn btn-secondary mt-2 mb-5">Cancel</a>
+        </form>
+    </div>
+</div>

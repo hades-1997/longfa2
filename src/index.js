@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import route from './routers/index.js';
 import db from './config/db/index.js';
+import methodOverride from 'method-override';
+
 
 //connect db
 
@@ -24,12 +26,16 @@ app.engine(
   '.hbs',
   engine({
     extname: '.hbs',
+    helpers: {
+      sum : (a , b) => a + b,
+    }
   }),
 );
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'resources/views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 //config route init
 route(app);
 

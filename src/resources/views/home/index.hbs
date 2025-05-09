@@ -1,0 +1,91 @@
+<div class="border border-light mt-3 p-5 bg-light">
+    <form class="form-inline" action="">
+        <input type="text" name="search" class="form-control mb-2 mr-sm-2" id="search" placeholder="Tìm kiếm">
+        <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
+    </form>
+</div>
+<div class="table-responsive mt-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên máy tính</th>
+                <th scope="col">Window</th>
+                <th scope="col">Key Window</th>
+                <th scope="col">Office</th>
+                <th scope="col">Key Office</th>
+                <th scope="col">link office</th>
+                <th scope="col">Tài khoản</th>
+                <th scope="col">Mật khẩu</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each keyactives}}
+            <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.window_version}}</td>
+                <td>{{this.key_window}}</td>
+                <td>{{this.office_version}}</td>
+                <td>{{this.key_office}}</td>
+                <td>{{this.office_link}}</td>
+                <td>{{this.username}}</td>
+                <td>{{this.password}}</td>
+                <td>
+                    <a href="{{this._id}}/edit" class="btn btn-edit-link">Sửa</a>
+                    <a href="#" class="btn btn-remove-link" data-bs-toggle="modal" data-bs-target="#delete-key-active" data-id="{{this._id}}">Xóa</a>
+
+                </td>
+            </tr>
+            {{else}}
+                <tr>
+                    <td colspan="10" class="text-center">Không có máy tính nào !!! <a href="/create">Thêm mới máy tính</a></td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{!-- delete hidden form --}}
+<form name="delete-key-form" method="POST"></form>
+
+{{!-- modal delete --}}
+
+<div class="modal" id="delete-key-active" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xóa dữ liệu máy tính</h5>
+                
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn xóa dữ liệu của bộ máy tính này không?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="btn-delete-key" class="btn btn-danger">Xóa bỏ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+       var keyId;
+       var deleteForm = document.forms['delete-key-form'];
+       var btnDelete = document.getElementById('btn-delete-key');
+
+        $('#delete-key-active').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); 
+             keyId = button.data('id');
+        });
+
+        btnDelete.onclick = function () {
+            deleteForm.action = '/' + keyId + '?_method=DELETE';
+            deleteForm.submit();
+        };
+    });
+
+    
+</script>
+{{!--  --}}
