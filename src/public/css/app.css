@@ -26,6 +26,11 @@ a {
     text-decoration: none;
 }
 
+.checkbox-select-all-options {
+    width: 120px;
+    margin: 0px 8px;
+}
+
 /* Animation */
 
 @keyframes fadeIn {

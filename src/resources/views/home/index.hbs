@@ -5,6 +5,19 @@
     </form>
 </div>
 <div class="table-responsive mt-5">
+    <div class="mt-4 mb-3 d-flex align-items-center">
+        <div class="form-check ">
+            <input class="form-check-input" type="checkbox" value="" id="check-all">
+            <label class="form-check-label" for="check-all">
+                Chọn tất cả
+            </label>
+        </div>
+        <select class="form-select form-select-sm checkbox-select-all-options" aria-label=".form-select-sm example">
+            <option selected>-- Hành động -- </option>
+            <option value="delete">Xóa</option>
+        </select>
+        <button class="btn btn-primary btn-sm disable">Áp dụng</button>
+    </div>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -45,6 +58,7 @@
             {{/each}}
         </tbody>
     </table>
+   
 </div>
 {{!-- delete hidden form --}}
 <form name="delete-key-form" method="POST"></form>
