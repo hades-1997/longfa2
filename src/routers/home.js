@@ -11,7 +11,7 @@ router.post('/import', upload.single('excelFile'), homeControllers.importExcel);
 router.get('/:id/edit', homeControllers.edit);
 router.put('/:id', homeControllers.update);
 router.delete('/:id', homeControllers.destroy);
-// router.get('/:slug', homeControllers.show);
+router.use('/home', homeControllers.index);
 router.use('/', homeControllers.index);
 
 

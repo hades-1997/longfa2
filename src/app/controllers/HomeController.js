@@ -1,6 +1,8 @@
 import KeyModel from '../models/KeyActive.js';
 import mongooseHelpers from '../../util/mongoose.js';
 import XLSX from 'xlsx';
+import fs from 'fs';
+import slugify from 'slugify';
 
 class HomeController {
     async index(req, res, next) {
@@ -61,45 +63,66 @@ class HomeController {
     // [POST] home/import
     async importExcel(req, res, next) {
         try {
+            // 1. Kiểm tra file
             if (!req.file) {
-                return res.render('home/import', {
-                    error: 'Vui lòng chọn file Excel để import',
-                    success: null
-                });
+              return res.render('home/import', {
+                error: 'Vui lòng chọn file Excel để import',
+                success: null
+              });
             }
-
-            const workbook = XLSX.readFile(req.file.path);
+        
+            // 2. Đọc file Excel
+            const filePath = req.file.path;
+            const workbook = XLSX.readFile(filePath);
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            const data = XLSX.utils.sheet_to_json(worksheet);
+        
+            // 3. Chuyển thành mảng 2 chiều
+            const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            data.shift(); // bỏ tiêu đề
 
-            if (data.length === 0) {
-                return res.render('home/import', {
-                    error: 'File Excel không có dữ liệu',
-                    success: null
-                });
-            }
+            // 4. Chuyển thành danh sách object hợp lệ
 
-            // Validate data
-            const validData = data.filter(item => item.name);
+            const validData = data.map((row, index) => ({
+                name: row[0]?.toString().trim() || null,
+                window_version: row[1]?.toString().trim() || null,
+                key_window: row[2]?.toString().trim() || null,
+                office_version: row[3]?.toString().trim() || null,
+                key_office: row[4]?.toString().trim() || null,
+                office_link: row[5]?.toString().trim() || null,
+                username: row[6]?.toString().trim() || null,  
+                password: row[7]?.toString().trim() || null, 
+                slug: row[0] ? slugify(row[0], { lower: true }) : `name-${index}`
+            })).filter(item => item.name && item.slug); // Lọc các dòng không hợp lệ
+    
+
             if (validData.length === 0) {
-                return res.render('home/import', {
-                    error: 'Không có dữ liệu hợp lệ trong file Excel',
-                    success: null
-                });
-            }
-
-            // Insert data to database
-            await KeyModel.insertMany(validData);
-            
-            req.flash('success', `Import thành công ${validData.length} bản ghi`);
-            res.redirect('/');
-        } catch (error) {
-            res.render('home/import', {
-                error: 'Có lỗi xảy ra khi import file Excel. Vui lòng kiểm tra lại định dạng file',
+              return res.render('home/import', {
+                error: 'Không có dữ liệu hợp lệ trong file Excel',
                 success: null
+              });
+            }
+            
+            console.log(validData)
+            // 5. Lưu vào database
+            await KeyModel.insertMany(validData);
+        
+            // 6. Xóa file sau khi dùng
+            // fs.unlink(filePath, (err) => {
+            //   if (err) console.error('Lỗi khi xóa file:', err);
+            // });
+        
+            // 7. Chuyển hướng sau thành công
+            // req.flash('success', `Import thành công ${validData.length} bản ghi`);
+            res.redirect('/');
+        
+          } catch (error) {
+            console.error('Lỗi import Excel:', error);
+            res.render('home/import', {
+              error: 'Có lỗi xảy ra khi import file Excel. Vui lòng kiểm tra lại định dạng file',
+              success: null
             });
-        }
+          }
     }
 }
 
