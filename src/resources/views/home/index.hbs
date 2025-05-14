@@ -4,62 +4,69 @@
         <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
     </form>
 </div>
-<div class="table-responsive mt-5">
-    <div class="mt-4 mb-3 d-flex align-items-center">
-        <div class="form-check ">
-            <input class="form-check-input" type="checkbox" value="" id="check-all">
-            <label class="form-check-label" for="check-all">
-                Chọn tất cả
-            </label>
+<form action="">
+    <div class="table-responsive mt-5">
+        <div class="mt-4 mb-3 d-flex align-items-center">
+            <div class="form-check ">
+                <input class="form-check-input" type="checkbox" value="" id="check-all">
+                <label class="form-check-label" for="check-all">
+                    Chọn tất cả
+                </label>
+            </div>
+            <select class="form-select form-select-sm checkbox-select-all-options" aria-label=".form-select-sm example">
+                <option selected>-- Hành động -- </option>
+                <option value="delete">Xóa</option>
+            </select>
+            <button class="btn btn-primary btn-sm btn-check-all-submit disabled" >Áp dụng</button>
         </div>
-        <select class="form-select form-select-sm checkbox-select-all-options" aria-label=".form-select-sm example">
-            <option selected>-- Hành động -- </option>
-            <option value="delete">Xóa</option>
-        </select>
-        <button class="btn btn-primary btn-sm disable">Áp dụng</button>
-    </div>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tên máy tính</th>
-                <th scope="col">Window</th>
-                <th scope="col">Key Window</th>
-                <th scope="col">Office</th>
-                <th scope="col">Key Office</th>
-                <th scope="col">link office</th>
-                <th scope="col">Tài khoản</th>
-                <th scope="col">Mật khẩu</th>
-                <th>#</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each keyactives}}
-            <tr>
-                <th scope="row">{{sum @index 1}}</th>
-                <td>{{this.name}}</td>
-                <td>{{this.window_version}}</td>
-                <td>{{this.key_window}}</td>
-                <td>{{this.office_version}}</td>
-                <td>{{this.key_office}}</td>
-                <td>{{this.office_link}}</td>
-                <td>{{this.username}}</td>
-                <td>{{this.password}}</td>
-                <td>
-                    <a href="{{this._id}}/edit" class="btn btn-edit-link">Sửa</a>
-                    <a href="#" class="btn btn-remove-link" data-bs-toggle="modal" data-bs-target="#delete-key-active" data-id="{{this._id}}">Xóa</a>
-
-                </td>
-            </tr>
-            {{else}}
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td colspan="10" class="text-center">Không có máy tính nào !!! <a href="/create">Thêm mới máy tính</a></td>
+                    <th scope="col" colspan="2">#</th>
+                    <th scope="col">Tên máy tính</th>
+                    <th scope="col">Window</th>
+                    <th scope="col">Key Window</th>
+                    <th scope="col">Office</th>
+                    <th scope="col">Key Office</th>
+                    <th scope="col">link office</th>
+                    <th scope="col">Tài khoản</th>
+                    <th scope="col">Mật khẩu</th>
+                    <th>#</th>
                 </tr>
-            {{/each}}
-        </tbody>
-    </table>
-   
-</div>
+            </thead>
+            <tbody>
+                {{#each keyactives}}
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" name="keyIds[]" type="checkbox" value="{{this._id}}">
+                        </div>
+                    </td>
+                    <th scope="row">{{sum @index 1}}</th>
+                    <td>{{this.name}}</td>
+                    <td>{{this.window_version}}</td>
+                    <td>{{this.key_window}}</td>
+                    <td>{{this.office_version}}</td>
+                    <td>{{this.key_office}}</td>
+                    <td>{{this.office_link}}</td>
+                    <td>{{this.username}}</td>
+                    <td>{{this.password}}</td>
+                    <td>
+                        <a href="{{this._id}}/edit" class="btn btn-edit-link">Sửa</a>
+                        <a href="#" class="btn btn-remove-link" data-bs-toggle="modal" data-bs-target="#delete-key-active" data-id="{{this._id}}">Xóa</a>
+
+                    </td>
+                </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="10" class="text-center">Không có máy tính nào !!! <a href="/create">Thêm mới máy tính</a></td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    
+    </div>
+</form>
 {{!-- delete hidden form --}}
 <form name="delete-key-form" method="POST"></form>
 
@@ -85,10 +92,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-       var keyId;
-       var deleteForm = document.forms['delete-key-form'];
-       var btnDelete = document.getElementById('btn-delete-key');
-
+        var keyId;
+        var deleteForm = document.forms['delete-key-form'];
+        var btnDelete = document.getElementById('btn-delete-key');
+        var checkBoxAll = $('#check-all');
+        var keyCheckBoxAll = $('input[name="keyIds[]"]');
+        var checkAllSubmitBtn = $('.btn-check-all-submit');
         $('#delete-key-active').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); 
              keyId = button.data('id');
@@ -98,6 +107,34 @@
             deleteForm.action = '/' + keyId + '?_method=DELETE';
             deleteForm.submit();
         };
+
+        //checkbox all change
+        checkBoxAll.change(function(){
+            var isCheckedAll = $(this).prop('checked');
+            keyCheckBoxAll.prop("checked",isCheckedAll);
+            renderCheckAllSubmitBtn();
+        });
+
+        //checkbox item change 
+        keyCheckBoxAll.change(function() {
+            var isCheckedAll = keyCheckBoxAll.length === $('input[name="keyIds[]"]:checked').length;
+            checkBoxAll.prop("checked",isCheckedAll);
+            renderCheckAllSubmitBtn();
+        });
+
+        //btn submit click
+        checkAllSubmitBtn.click(function() {
+            
+        })
+        // render check all submit btn
+        function renderCheckAllSubmitBtn() {
+            var checkedKey = $('input[name="keyIds[]"]:checked').length;
+            if(checkedKey) {
+                checkAllSubmitBtn.removeClass('disabled');
+            }else {
+                checkAllSubmitBtn.addClass('disabled');
+            }
+        }
     });
 
     
