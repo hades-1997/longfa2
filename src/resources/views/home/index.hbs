@@ -1,10 +1,10 @@
 <div class="border border-light mt-3 p-5 bg-light">
-    <form class="form-inline" action="">
-        <input type="text" name="search" class="form-control mb-2 mr-sm-2" id="search" placeholder="Tìm kiếm">
+    <form class="form-inline" action="/search" >
+        <input type="text" name="q" class="form-control mb-2 mr-sm-2" id="search" placeholder="Tìm kiếm">
         <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
     </form>
 </div>
-<form action="">
+<form action="/handle-form-actions" name="container-form" method="POST">
     <div class="table-responsive mt-5">
         <div class="mt-4 mb-3 d-flex align-items-center">
             <div class="form-check ">
@@ -13,11 +13,11 @@
                     Chọn tất cả
                 </label>
             </div>
-            <select class="form-select form-select-sm checkbox-select-all-options" aria-label=".form-select-sm example">
-                <option selected>-- Hành động -- </option>
+            <select class="form-select form-select-sm checkbox-select-all-options" aria-label=".form-select-sm example" name="action" required>
+                <option value="">-- Hành động -- </option>
                 <option value="delete">Xóa</option>
             </select>
-            <button class="btn btn-primary btn-sm btn-check-all-submit disabled" >Áp dụng</button>
+            <button class="btn btn-primary btn-sm btn-check-all-submit" disabled="disabled">Áp dụng</button>
         </div>
         <table class="table table-bordered">
             <thead>
@@ -94,6 +94,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         var keyId;
         var deleteForm = document.forms['delete-key-form'];
+      //  var containerForm = document.forms['container-form'];
+        var containerForm = $('form[name="container-form"]');
         var btnDelete = document.getElementById('btn-delete-key');
         var checkBoxAll = $('#check-all');
         var keyCheckBoxAll = $('input[name="keyIds[]"]');
@@ -123,18 +125,31 @@
         });
 
         //btn submit click
-        checkAllSubmitBtn.click(function() {
+        checkAllSubmitBtn.click(function(e) {
+           // e.preventDefault();
+           var isSubmitTable = !$(this).hasClass('disabled');
+            if(!isSubmitTable) {
+                containerForm.submit();
+            }
             
-        })
+        });
+
+       // containerForm.on('submit', function(e) {
+       //     var isSubmitTable = !$(this).hasClass('disabled');
+       //     if(isSubmitTable) {
+       //          e.preventDefault();
+       //     }
+       // });
         // render check all submit btn
         function renderCheckAllSubmitBtn() {
             var checkedKey = $('input[name="keyIds[]"]:checked').length;
             if(checkedKey) {
-                checkAllSubmitBtn.removeClass('disabled');
+                checkAllSubmitBtn.attr('disabled', false);
             }else {
-                checkAllSubmitBtn.addClass('disabled');
+                checkAllSubmitBtn.attr('disabled', true);
             }
         }
+
     });
 
     

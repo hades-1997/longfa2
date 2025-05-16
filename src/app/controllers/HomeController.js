@@ -12,6 +12,24 @@ class HomeController {
             })
         }).catch(error => next(error));
     }
+    
+    // [GET] search
+    async search(req, res, next) {
+        const keyword = req.query.q;
+        await KeyModel.find({
+            $or: [
+                { name: { $regex: keyword, $options: 'i' } },
+                { key_window: { $regex: keyword, $options: 'i' } },
+                { key_office: { $regex: keyword, $options: 'i' } },
+                { window_version: { $regex: keyword, $options: 'i' } },
+                { office_version: { $regex: keyword, $options: 'i' } },
+            ]
+        }).then(keyactives => {
+            res.render('home/index', {
+                keyactives: mongooseHelpers.mutipleMongooseToObject(keyactives)
+            })
+        }).catch(error => next(error));
+    }
 
     // [GET] home/create
     create(req, res) {
@@ -46,7 +64,6 @@ class HomeController {
 
      // [DELETE] /:id
     async destroy(req, res, next) {
-        console.log('done')
         await KeyModel.deleteOne({_id : req.params.id})
                 .then(() => res.redirect('back'))
                 .catch((error) => {});
@@ -123,6 +140,19 @@ class HomeController {
               success: null
             });
           }
+    }
+
+    async handleFormActions(req, res, next) {
+        switch(req.body.action) {
+            case "delete":
+                await KeyModel.deleteOne({_id : {$in: req.body.keyIds}})
+                .then(() => res.redirect('/'))
+                .catch((error) => {next});
+                break;
+            default :
+                res.json({Message: "Action Invalid"})    
+        }
+
     }
 }
 

@@ -6,7 +6,9 @@ const router = express.Router();
 
 router.get('/create', homeControllers.create);
 router.post('/store', homeControllers.store);
+router.get('/search/:q', homeControllers.search);
 router.get('/import', homeControllers.importForm);
+router.post('/handle-form-actions', homeControllers.handleFormActions);
 router.post('/import', upload.single('excelFile'), homeControllers.importExcel);
 router.get('/:id/edit', homeControllers.edit);
 router.put('/:id', homeControllers.update);
