@@ -14,21 +14,27 @@ class HomeController {
     }
     
     // [GET] search
-    async search(req, res, next) {
-        const keyword = req.query.q;
-        await KeyModel.find({
-            $or: [
-                { name: { $regex: keyword, $options: 'i' } },
-                { key_window: { $regex: keyword, $options: 'i' } },
-                { key_office: { $regex: keyword, $options: 'i' } },
-                { window_version: { $regex: keyword, $options: 'i' } },
-                { office_version: { $regex: keyword, $options: 'i' } },
-            ]
-        }).then(keyactives => {
+   async search(req, res, next) {
+
+        try {
+            const searchQuery = req.query.q || '';
+            const query = searchQuery ? { 
+                name: { $regex: searchQuery, $options: 'i' } 
+            
+            } : {};
+            
+            const keyactives = await KeyModel.find(query);
             res.render('home/index', {
-                keyactives: mongooseHelpers.mutipleMongooseToObject(keyactives)
+                keyactives: mongooseHelpers.mutipleMongooseToObject(keyactives),
+                searchQuery
             })
-        }).catch(error => next(error));
+           
+        } catch (error) {
+            res.json({
+                success: false,
+                error: error.message
+            });
+        }
     }
 
     // [GET] home/create
