@@ -32,7 +32,7 @@ a {
 }
 
 tr td {
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 /* Animation */

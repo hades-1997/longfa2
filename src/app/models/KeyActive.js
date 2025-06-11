@@ -12,6 +12,7 @@ const KeyActive = new Schema({
   office_link: { type: String, maxLength: 600 },
   username: { type: String, maxLength: 600 },
   password: { type: String, maxLength: 600 },
+  usb: { type: String, maxLength: 600 },
   slug: { type: String, slug: 'name', unique: true }
 }, {
   timestamps : true,

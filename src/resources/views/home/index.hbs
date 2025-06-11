@@ -25,19 +25,20 @@
                     <th scope="col" colspan="2">#</th>
                     <th scope="col">Tên máy tính</th>
                     <th scope="col">Window</th>
-                    <th scope="col">Key Window</th>
+                    <th   style="width: 100px;">Key Window</th>
                     <th scope="col">Office</th>
-                    <th scope="col">Key Office</th>
+                    <th  style="width: 100px;">Key Office</th>
                     <th scope="col">link office</th>
                     <th scope="col">Tài khoản</th>
                     <th scope="col">Mật khẩu</th>
+                    <th scope="col">Khóa USB</th>
                     <th>#</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each keyactives}}
                 <tr>
-                    <td>
+                    <td scope="row">
                         <div class="form-check">
                             <input class="form-check-input" name="keyIds[]" type="checkbox" value="{{this._id}}">
                         </div>
@@ -45,12 +46,13 @@
                     <th scope="row">{{sum @index 1}}</th>
                     <td>{{this.name}}</td>
                     <td>{{this.window_version}}</td>
-                    <td>{{this.key_window}}</td>
+                    <td  style="width: 100px;">{{this.key_window}}</td>
                     <td>{{this.office_version}}</td>
-                    <td>{{this.key_office}}</td>
+                    <td  style="width: 100px;">{{this.key_office}}</td>
                     <td>{{this.office_link}}</td>
                     <td>{{this.username}}</td>
                     <td>{{this.password}}</td>
+                    <td>{{this.usb}}</td>
                     <td>
                         <a href="{{this._id}}/edit" class="btn btn-edit-link">Sửa</a>
                         <a href="#" class="btn btn-remove-link" data-bs-toggle="modal" data-bs-target="#delete-key-active" data-id="{{this._id}}">Xóa</a>
